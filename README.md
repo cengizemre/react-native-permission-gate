@@ -17,6 +17,10 @@ const cam = usePermission('camera', { rationale: true });
 {cam.isBlocked && <MyBlockedNotice onOpenSettings={cam.openSettings} />}
 ```
 
+<p align="center">
+  <img src="docs/demo.gif" width="300" alt="Demo: rationale sheet, native prompt, blocked handling and multi-permission flow driven by permission-gate" />
+</p>
+
 ---
 
 ## Why
@@ -37,6 +41,28 @@ npm install react-native-permission-gate react-native-permissions
 ```
 
 `react-native-permissions` is a peer dependency and needs its own one-time native setup (iOS `Podfile` `setup_permissions` + `Info.plist` usage strings, Android manifest entries). Follow its [setup guide](https://github.com/zoontek/react-native-permissions#setup) - that's the only native step.
+
+### Expo
+
+Works with **Expo dev clients / prebuild** (not Expo Go, which can't load custom native modules). Configure the permission handlers through the `react-native-permissions` config plugin and rebuild your dev client:
+
+```jsonc
+// app.json
+{
+  "expo": {
+    "plugins": [
+      [
+        "react-native-permissions",
+        {
+          "iosPermissions": ["Camera", "Microphone", "PhotoLibrary", "Notifications"]
+        }
+      ]
+    ]
+  }
+}
+```
+
+Remember to add the matching `NSxxxUsageDescription` strings via `expo.ios.infoPlist` (and Android permissions via `expo.android.permissions`).
 
 ## Quick start
 

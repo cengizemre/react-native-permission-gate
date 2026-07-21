@@ -1,27 +1,26 @@
 # permission-gate example
 
-Bare React Native app demonstrating [`react-native-permission-gate`](../README.md).
+Bare React Native app demoing `react-native-permission-gate`:
 
-Two tabs:
-
-- **Single** — a permission playground: pick `camera` / `microphone` / `photoLibrary` / `notifications`, watch `status` + `phase` live, drive the rationale sheet and the blocked → Settings path.
-- **Media (multi)** — `usePermissions(['camera', 'microphone'])`: one shared rationale, one request, an `allGranted` aggregate.
+- **Single tab** — pick a permission (camera, microphone, photoLibrary, notifications) and drive the full flow: rationale sheet → native prompt → granted/blocked, with live `status` / `phase` readout.
+- **Media (multi) tab** — `usePermissions(['camera', 'microphone'])`: one shared rationale, sequential prompts, `allGranted` aggregation.
 
 ## Run it
 
-From the **repo root**:
+From the repository root:
 
 ```sh
-yarn                      # install workspace deps
-
-# iOS
+yarn                 # install workspace deps
 cd example/ios && pod install && cd ../..
-yarn example ios
-
-# Android
-yarn example android
+yarn example ios     # or: yarn example android
 ```
 
-The app uses the local library source directly — edits under `src/` hot-reload into the app.
+iOS `Info.plist` usage strings and `Podfile` `setup_permissions` are already configured for the demoed permissions.
 
-> Permission prompts only appear once per install. To reset iOS simulator permissions: Device → Erase All Content and Settings, or `xcrun simctl privacy booted reset all`.
+## Reset permissions between runs
+
+Once a permission is granted/denied the OS remembers it. To replay the flow on the iOS simulator:
+
+```sh
+xcrun simctl privacy booted reset all permissiongate.example
+```
