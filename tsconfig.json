@@ -4,6 +4,7 @@
     "paths": {
       "react-native-permission-gate": ["./src/index"]
     },
+    "types": ["jest"],
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "customConditions": [
