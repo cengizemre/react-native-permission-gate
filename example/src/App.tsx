@@ -86,7 +86,7 @@ function SinglePanel() {
       </View>
 
       <Pressable style={styles.button} onPress={() => perm.request()}>
-        <Text style={styles.buttonText}>Request “{selected}”</Text>
+        <Text style={styles.buttonText}>Request "{selected}"</Text>
       </Pressable>
 
       {perm.isBlocked && (
@@ -100,7 +100,7 @@ function SinglePanel() {
 
       <RationaleSheet
         visible={perm.phase === 'rationale'}
-        title={`Allow “${selected}”?`}
+        title={`Allow "${selected}"?`}
         body={`This feature needs ${selected} access. You can change it anytime in Settings.`}
         onConfirm={perm.confirmRationale}
         onCancel={perm.cancelRationale}
@@ -119,13 +119,13 @@ function MultiPanel() {
   return (
     <>
       <Text style={styles.sectionNote}>
-        Camera + microphone, acquired together — one shared rationale, one
+        Camera + microphone, acquired together - one shared rationale, one
         request.
       </Text>
 
       <View style={styles.card}>
         {MEDIA.map((name) => (
-          <Row key={name} label={name} value={media.statuses[name] ?? '—'} />
+          <Row key={name} label={name} value={media.statuses[name] ?? '-'} />
         ))}
         <Row label="allGranted" value={String(media.allGranted)} />
       </View>

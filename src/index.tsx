@@ -1,4 +1,4 @@
-// Hooks — the primary, headless API.
+// Hooks - the primary, headless API.
 export { usePermission } from './hooks/usePermission';
 export { usePermissions } from './hooks/usePermissions';
 export type {
@@ -14,7 +14,7 @@ export type {
   BlockedControls,
 } from './components/PermissionGate';
 
-// Provider — optional shared adapter + default options.
+// Provider - optional shared adapter + default options.
 export { PermissionProvider, PermissionContext } from './context';
 export type {
   PermissionProviderProps,

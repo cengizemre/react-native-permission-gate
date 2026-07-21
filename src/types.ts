@@ -1,11 +1,11 @@
 /**
  * The OS-level truth about a permission, normalized across platforms.
  *
- * - `granted`      — access is allowed.
- * - `limited`      — partial access (iOS: e.g. selected photos / contacts).
- * - `requestable`  — not granted yet, but the OS prompt can still be shown.
- * - `blocked`      — denied and the OS will no longer prompt; only Settings helps.
- * - `unavailable`  — the capability does not exist on this device/build.
+ * - `granted`      - access is allowed.
+ * - `limited`      - partial access (iOS: e.g. selected photos / contacts).
+ * - `requestable`  - not granted yet, but the OS prompt can still be shown.
+ * - `blocked`      - denied and the OS will no longer prompt; only Settings helps.
+ * - `unavailable`  - the capability does not exist on this device/build.
  */
 export type PermissionStatus =
   'granted' | 'limited' | 'requestable' | 'blocked' | 'unavailable';
@@ -14,10 +14,10 @@ export type PermissionStatus =
  * Where the request flow currently sits. Independent from {@link PermissionStatus}:
  * `status` is the OS truth, `phase` is the position in the UX state machine.
  *
- * - `idle`        — nothing in flight.
- * - `rationale`   — pre-prompt is shown, awaiting the user's decision.
- * - `requesting`  — the native OS dialog is up.
- * - `settled`     — the flow finished; read `status` for the outcome.
+ * - `idle`        - nothing in flight.
+ * - `rationale`   - pre-prompt is shown, awaiting the user's decision.
+ * - `requesting`  - the native OS dialog is up.
+ * - `settled`     - the flow finished; read `status` for the outcome.
  */
 export type FlowPhase = 'idle' | 'rationale' | 'requesting' | 'settled';
 
@@ -73,7 +73,7 @@ export interface UsePermissionOptions {
    */
   rationale?: boolean;
   /**
-   * Re-check status when the app returns to the foreground — catches changes the
+   * Re-check status when the app returns to the foreground - catches changes the
    * user made in the OS Settings screen.
    * @default true
    */

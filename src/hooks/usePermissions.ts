@@ -50,7 +50,7 @@ interface Pending {
 /**
  * Aggregate variant of {@link usePermission} for permissions acquired together
  * (e.g. camera + microphone for video). One shared rationale gate, one
- * `request()`, one status map. The `names` array is treated as a stable set —
+ * `request()`, one status map. The `names` array is treated as a stable set -
  * pass a constant or memoized array.
  */
 export function usePermissions(

@@ -7,7 +7,7 @@ import type {
 
 /**
  * Imperative helpers for use outside React (services, sagas, utilities). These
- * are the raw check/request/openSettings calls with no rationale UX — for the
+ * are the raw check/request/openSettings calls with no rationale UX - for the
  * full flow with pre-prompts, use {@link usePermission} or {@link PermissionGate}.
  */
 

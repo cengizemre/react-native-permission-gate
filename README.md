@@ -5,9 +5,9 @@
 [![license](https://img.shields.io/npm/l/react-native-permission-gate.svg)](./LICENSE)
 [![types](https://img.shields.io/npm/types/react-native-permission-gate.svg)](./src/types.ts)
 
-**Headless permission-flow orchestration for React Native.** A state-machine hook, rationale gating, and a `<PermissionGate>` component — you bring the UI.
+Headless permission-flow orchestration for React Native: a state-machine hook, rationale gating, and a `<PermissionGate>` component. Bring your own UI.
 
-`react-native-permissions` gives you the native call. The _flow_ around it — show a pre-prompt, request, detect "denied", route to Settings, re-check when the user comes back — is what everyone hand-writes in every app. This library is that flow, as a headless state machine. It renders nothing and ships no modals; every pixel stays yours.
+`react-native-permissions` gives you the native call. The flow around it - show a pre-prompt, request, detect "denied", route to Settings, re-check when the user comes back - is what everyone hand-writes in every app. This library is that flow, as a headless state machine. It renders nothing and ships no modals.
 
 ```tsx
 const cam = usePermission('camera', { rationale: true });
@@ -21,12 +21,12 @@ const cam = usePermission('camera', { rationale: true });
 
 ## Why
 
-- **Headless, bring-your-own-UI** — no baked-in modals or styles. Drive your own components off `status` / `phase`.
-- **Explicit state machine, not magic** — a real, testable machine (`idle → rationale → requesting → settled`). No hidden behavior.
-- **The whole flow in one hook** — check, rationale pre-prompt, native prompt, blocked → Settings, and focus re-validation.
-- **`await` or render** — `request()` resolves with the final status, so it works imperatively _and_ declaratively.
-- **Adapter-agnostic core** — the machine has zero native dependencies, so it (and your flows) unit-test without a device.
-- **Typed** — full TypeScript, normalized cross-platform status model.
+- No baked-in modals or styles - it's headless, so you drive your own components off `status` / `phase`.
+- A real, testable state machine (`idle → rationale → requesting → settled`) instead of ad-hoc booleans.
+- One hook covers the whole flow: check, rationale pre-prompt, native prompt, blocked → Settings, and focus re-validation.
+- `request()` resolves with the final status, so it works imperatively (`await`) or declaratively (render on `phase`).
+- The core has zero native dependencies, so your flows unit-test without a device.
+- Full TypeScript with a normalized cross-platform status model.
 
 ## Installation
 
@@ -36,7 +36,7 @@ yarn add react-native-permission-gate react-native-permissions
 npm install react-native-permission-gate react-native-permissions
 ```
 
-`react-native-permissions` is a peer dependency and needs its own one-time native setup (iOS `Podfile` `setup_permissions` + `Info.plist` usage strings, Android manifest entries). Follow its [setup guide](https://github.com/zoontek/react-native-permissions#setup) — that's the only native step.
+`react-native-permissions` is a peer dependency and needs its own one-time native setup (iOS `Podfile` `setup_permissions` + `Info.plist` usage strings, Android manifest entries). Follow its [setup guide](https://github.com/zoontek/react-native-permissions#setup) - that's the only native step.
 
 ## Quick start
 
@@ -80,14 +80,14 @@ import { PermissionGate } from 'react-native-permission-gate';
 
 ## Core concepts
 
-Two independent axes — kept separate on purpose:
+Two independent axes - kept separate on purpose:
 
 | `status` (the OS truth) | Meaning |
 | --- | --- |
 | `granted` | Access allowed |
 | `limited` | Partial access (iOS: selected photos/contacts) |
 | `requestable` | Not granted yet, but the OS prompt can still show |
-| `blocked` | Denied; the OS won't prompt again — only Settings helps |
+| `blocked` | Denied; the OS won't prompt again - only Settings helps |
 | `unavailable` | Not supported on this device/build |
 
 | `phase` (the flow position) | Meaning |
@@ -95,20 +95,20 @@ Two independent axes — kept separate on purpose:
 | `idle` | Nothing in flight |
 | `rationale` | Your pre-prompt is showing, awaiting the user's choice |
 | `requesting` | The native OS dialog is up |
-| `settled` | The flow finished — read `status` for the outcome |
+| `settled` | The flow finished - read `status` for the outcome |
 
 ```mermaid
 stateDiagram-v2
     [*] --> idle
-    idle --> rationale: request() · rationale on
-    idle --> requesting: request() · rationale off
+    idle --> rationale: request(), rationale on
+    idle --> requesting: request(), rationale off
     rationale --> requesting: confirmRationale()
     rationale --> idle: cancelRationale()
     requesting --> settled: OS responds
     settled --> settled: refresh() / app focus
 ```
 
-When `request()` is called on a status that can't be prompted (`granted`, `blocked`, `limited`, `unavailable`), the machine settles immediately and resolves — so a `blocked` result is something you _react to_, never a dead end.
+When `request()` is called on a status that can't be prompted (`granted`, `blocked`, `limited`, `unavailable`), the machine settles immediately and resolves - so a `blocked` result is something you _react to_, never a dead end.
 
 ## API
 
@@ -138,7 +138,7 @@ Returns a `PermissionController`:
 | `openSettings()` | `() => Promise<void>` | Open this app's OS settings |
 | `refresh()` | `() => Promise<PermissionStatus>` | Re-check on demand |
 
-Concurrent/double `request()` calls are de-duplicated — a double-tap never fires two native prompts or orphans a promise.
+Concurrent/double `request()` calls are de-duplicated - a double-tap never fires two native prompts or orphans a promise.
 
 ### `usePermissions(names, options?)`
 
@@ -163,15 +163,17 @@ media.anyBlocked; // at least one is blocked
 
 Declarative wrapper over the hook. Renders `children` once granted (or `limited`); otherwise renders your `rationale` / `blocked` / `fallback`. Pass a **function** as `children` to take full control for every state.
 
+Unlike the bare hook, the gate starts the request flow automatically on mount (`requestOnMount: true`) — override it via `options` if you want a manual trigger.
+
 ```tsx
 <PermissionGate name="microphone" options={{ rationale: true }}>
-  {(p) => <Text>{p.status} · {p.phase}</Text>}
+  {(p) => <Text>{p.status} / {p.phase}</Text>}
 </PermissionGate>
 ```
 
 ### `<PermissionProvider>`
 
-Optional. Sets a shared adapter and default options for the subtree — the hook works fine without it.
+Optional. Sets a shared adapter and default options for the subtree - the hook works fine without it.
 
 ```tsx
 <PermissionProvider defaults={{ rationale: true, revalidateOnFocus: true }}>
@@ -181,7 +183,7 @@ Optional. Sets a shared adapter and default options for the subtree — the hook
 
 ### Imperative (outside React)
 
-For services, sagas, and utilities — the raw calls, no rationale UX:
+For services, sagas, and utilities - the raw calls, no rationale UX:
 
 ```ts
 import {
@@ -201,11 +203,11 @@ const status = await checkPermission('camera');
 
 **Android only:** `storageReadAudio`, `storageReadVideo`, `bodySensors`.
 
-Each alias maps to the correct native permission per platform; anything not meaningful on the current platform resolves to `unavailable`. Need more? Provide a custom `adapter` — or open an issue.
+Each alias maps to the correct native permission per platform; anything not meaningful on the current platform resolves to `unavailable`. Need more? Provide a custom `adapter` - or open an issue.
 
 ## Testing your flows
 
-Because the core is adapter-agnostic, you can test permission logic with a mock adapter — no device, no native module:
+Because the core is adapter-agnostic, you can test permission logic with a mock adapter - no device, no native module:
 
 ```ts
 const adapter: PermissionAdapter = {
