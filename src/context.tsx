@@ -5,7 +5,7 @@ import type { PermissionAdapter, UsePermissionOptions } from './types';
 /** Options that can be defaulted for every hook/component under a provider. */
 export type PermissionDefaults = Pick<
   UsePermissionOptions,
-  'rationale' | 'revalidateOnFocus' | 'requestOnMount'
+  'rationale' | 'revalidateOnFocus' | 'requestOnMount' | 'notificationOptions'
 >;
 
 export interface PermissionContextValue {

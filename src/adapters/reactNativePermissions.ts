@@ -7,6 +7,7 @@ import {
   checkNotifications,
   requestNotifications,
   openSettings,
+  openPhotoPicker,
   type Permission,
   type PermissionStatus as RNPermissionStatus,
 } from 'react-native-permissions';
@@ -60,6 +61,8 @@ const ANDROID: NativeMap = {
 const TABLE: NativeMap =
   Platform.OS === 'ios' ? IOS : Platform.OS === 'android' ? ANDROID : {};
 
+const DEFAULT_NOTIFICATION_OPTIONS = ['alert', 'sound', 'badge'] as const;
+
 function toStatus(result: RNPermissionStatus): PermissionStatus {
   switch (result) {
     case RESULTS.GRANTED:
@@ -99,13 +102,11 @@ export const reactNativePermissionsAdapter: PermissionAdapter = {
     return toStatus(await check(native));
   },
 
-  async request(name) {
+  async request(name, options) {
     if (name === 'notifications') {
-      const { status } = await requestNotifications([
-        'alert',
-        'sound',
-        'badge',
-      ]);
+      const { status } = await requestNotifications(
+        options?.notificationOptions ?? [...DEFAULT_NOTIFICATION_OPTIONS]
+      );
       return toStatus(status);
     }
     const native = TABLE[name];
@@ -115,5 +116,10 @@ export const reactNativePermissionsAdapter: PermissionAdapter = {
 
   async openSettings() {
     await openSettings();
+  },
+
+  async openLimitedPicker() {
+    if (Platform.OS !== 'ios') return;
+    await openPhotoPicker();
   },
 };

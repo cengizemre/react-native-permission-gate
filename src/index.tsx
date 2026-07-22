@@ -27,10 +27,15 @@ export {
   checkPermission,
   requestPermission,
   openAppSettings,
+  openLimitedPicker,
 } from './imperative';
 
 // Default adapter (override via options.adapter or PermissionProvider).
 export { reactNativePermissionsAdapter } from './adapters/reactNativePermissions';
+
+// Prompt queue (app-wide native prompt serialization).
+export { createPromptQueue, promptQueue } from './core/queue';
+export type { PromptQueue } from './core/queue';
 
 export type {
   PermissionName,
@@ -39,4 +44,6 @@ export type {
   PermissionController,
   PermissionAdapter,
   UsePermissionOptions,
+  NotificationOption,
+  RequestOptions,
 } from './types';

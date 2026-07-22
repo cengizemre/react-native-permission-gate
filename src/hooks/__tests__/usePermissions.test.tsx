@@ -72,7 +72,10 @@ describe('usePermissions', () => {
 
     expect(result.current.allGranted).toBe(true);
     expect(adapter.request).toHaveBeenCalledTimes(1);
-    expect(adapter.request).toHaveBeenCalledWith('microphone');
+    expect(adapter.request).toHaveBeenCalledWith(
+      'microphone',
+      expect.anything()
+    );
     expect(await promise).toEqual(
       expect.objectContaining({ camera: 'granted', microphone: 'granted' })
     );

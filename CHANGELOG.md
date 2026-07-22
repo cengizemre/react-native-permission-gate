@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-07-22
+
+### Added
+
+- **App-wide prompt queue** — native permission prompts from every `usePermission` / `usePermissions` / `PermissionGate` (and imperative `requestPermission`) are serialized through a shared queue, so two concurrently mounted gates can no longer fire colliding OS dialogs. Exported as `promptQueue` / `createPromptQueue`.
+- **`notificationOptions`** — configure iOS notification authorization (`alert`, `badge`, `sound`, `carPlay`, `criticalAlert`, `provisional`, `providesAppSettings`) per hook or via `PermissionProvider` defaults. Enables quiet provisional delivery.
+- **Limited photo access helpers** — `controller.isLimited`, `controller.openLimitedPicker()` and the imperative `openLimitedPicker()` reopen the iOS limited photo picker while `status === 'limited'`. Custom adapters can opt in via the optional `PermissionAdapter.openLimitedPicker`.
+
+### Changed
+
+- `PermissionAdapter.request` now receives an optional second `RequestOptions` argument. Existing custom adapters keep working unchanged (the parameter is optional).
+
 ## [0.1.0] - 2026-07-21
 
 ### Added

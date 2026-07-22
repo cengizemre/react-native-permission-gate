@@ -28,6 +28,7 @@ const cam = usePermission('camera', { rationale: true });
 - No baked-in modals or styles - it's headless, so you drive your own components off `status` / `phase`.
 - A real, testable state machine (`idle → rationale → requesting → settled`) instead of ad-hoc booleans.
 - One hook covers the whole flow: check, rationale pre-prompt, native prompt, blocked → Settings, and focus re-validation.
+- Native prompts are serialized app-wide - concurrently mounted gates queue their OS dialogs instead of colliding.
 - `request()` resolves with the final status, so it works imperatively (`await`) or declaratively (render on `phase`).
 - The core has zero native dependencies, so your flows unit-test without a device.
 - Full TypeScript with a normalized cross-platform status model.
@@ -145,6 +146,7 @@ const controller = usePermission('camera', {
   rationale: false,          // gate the native prompt behind a `rationale` phase
   revalidateOnFocus: true,   // re-check when the app returns to the foreground
   requestOnMount: false,     // run the flow automatically on mount
+  notificationOptions: ['alert', 'sound', 'badge'], // iOS notifications: add 'provisional' for quiet delivery
   onStatusChange: (s) => {}, // called when the resolved status changes
   adapter,                   // override the backend (defaults to react-native-permissions)
 });
@@ -157,14 +159,16 @@ Returns a `PermissionController`:
 | `status` | `PermissionStatus` | Current OS truth |
 | `phase` | `FlowPhase` | Current flow position |
 | `isGranted` | `boolean` | `status === 'granted'` |
+| `isLimited` | `boolean` | `status === 'limited'` (iOS partial access) |
 | `isBlocked` | `boolean` | `status === 'blocked'` |
 | `request()` | `() => Promise<PermissionStatus>` | Run the flow; resolves with the final status |
 | `confirmRationale()` | `() => void` | Proceed from `rationale` to the native prompt |
 | `cancelRationale()` | `() => void` | Abort `rationale`, back to `idle` |
 | `openSettings()` | `() => Promise<void>` | Open this app's OS settings |
+| `openLimitedPicker()` | `() => Promise<void>` | iOS: reopen the limited photo picker while `isLimited` |
 | `refresh()` | `() => Promise<PermissionStatus>` | Re-check on demand |
 
-Concurrent/double `request()` calls are de-duplicated - a double-tap never fires two native prompts or orphans a promise.
+Concurrent/double `request()` calls are de-duplicated - a double-tap never fires two native prompts or orphans a promise. Beyond a single hook, **all native prompts are serialized through an app-wide queue**: if two gates mount on the same screen and both auto-request, the OS dialogs appear one after another instead of colliding. Imperative `requestPermission()` goes through the same queue.
 
 ### `usePermissions(names, options?)`
 
@@ -245,6 +249,26 @@ const adapter: PermissionAdapter = {
 
 const { result } = renderHook(() => usePermission('camera', { adapter }));
 ```
+
+## Roadmap
+
+Actively maintained — this is what I'm planning, roughly in order. Open an issue if you want to influence the priorities, or grab one if you'd like to contribute.
+
+- **Web adapter** — a `navigator.permissions`-backed adapter so the same hooks run on react-native-web (query where supported, graceful `unavailable` elsewhere).
+- **Android "never asked" detection** — Android reports both *never asked* and *soft-denied* as the same state before requesting. An optional tiny storage adapter would let the library distinguish them, so you can decide whether to show a rationale on the very first ask.
+- **Expo example app** — a second example using an Expo dev client + the `react-native-permissions` config plugin, so both workflows are covered end to end.
+- **Per-Provider prompt queue** — the queue is currently an app-wide singleton, which is correct for a single OS prompt surface but untestable to override; making it injectable via `PermissionProvider` would help large apps and tests.
+- **More aliases** — `siri`, `nearbyWifiDevices`, iOS `location accuracy` (full vs. reduced) are on the list; open an issue if you're missing one.
+
+## Known limitations
+
+Things I know about and consciously ship with — so you don't have to discover them the hard way:
+
+- **Android can't distinguish "never asked" from "denied once"** before the first request — both surface as `requestable`. `blocked` is only detectable *after* a request settles. This is an OS constraint; the roadmap item above is the planned mitigation.
+- **`notificationOptions` are iOS-only.** Android 13+ notification permission goes through the standard runtime-permission dialog and ignores them.
+- **`limited` is iOS-specific** (photos/contacts partial access). On Android the closest concept — the Android 14+ partial photo picker — is not yet modeled.
+- **Expo Go is not supported** (native module) — use a dev client or prebuild.
+- **The rationale phase is UX-only.** The library doesn't consult Android's `shouldShowRequestPermissionRationale`; you decide when to gate with `rationale: true`. This is by design (headless, explicit), but it means the library won't auto-suggest when a rationale is appropriate.
 
 ## License
 

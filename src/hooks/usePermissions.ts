@@ -7,6 +7,7 @@ import {
   useState,
 } from 'react';
 import { AppState, type AppStateStatus } from 'react-native';
+import { promptQueue } from '../core/queue';
 import { PermissionContext } from '../context';
 import type {
   FlowPhase,
@@ -50,7 +51,7 @@ interface Pending {
 /**
  * Aggregate variant of {@link usePermission} for permissions acquired together
  * (e.g. camera + microphone for video). One shared rationale gate, one
- * `request()`, one status map. The `names` array is treated as a stable set -
+ * `request()`, one status map. The `names` array is treated as a stable set —
  * pass a constant or memoized array.
  */
 export function usePermissions(
@@ -63,6 +64,8 @@ export function usePermissions(
     options.revalidateOnFocus ?? ctx.defaults.revalidateOnFocus ?? true;
   const requestOnMount =
     options.requestOnMount ?? ctx.defaults.requestOnMount ?? false;
+  const notificationOptions =
+    options.notificationOptions ?? ctx.defaults.notificationOptions;
   const adapter = options.adapter ?? ctx.adapter;
 
   // Stable identity for the set so effects don't re-run on every new array.
@@ -86,6 +89,8 @@ export function usePermissions(
   phaseRef.current = phase;
   const rationaleRef = useRef(rationale);
   rationaleRef.current = rationale;
+  const notificationOptionsRef = useRef(notificationOptions);
+  notificationOptionsRef.current = notificationOptions;
   const requestOnMountRef = useRef(requestOnMount);
   requestOnMountRef.current = requestOnMount;
 
@@ -110,7 +115,13 @@ export function usePermissions(
       if (mountedRef.current) setPhase('requesting');
       for (const name of list) {
         try {
-          const status = await adapter.request(name);
+          // Serialized through the app-wide queue: the batch's own prompts run
+          // one by one AND never collide with other mounted hooks/gates.
+          const status = await promptQueue.enqueue(() =>
+            adapter.request(name, {
+              notificationOptions: notificationOptionsRef.current,
+            })
+          );
           commit({ ...statusesRef.current, [name]: status });
         } catch {
           // Keep the previous status for this permission on failure.

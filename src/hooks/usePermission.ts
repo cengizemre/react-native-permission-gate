@@ -8,6 +8,7 @@ import {
 } from 'react';
 import { AppState, type AppStateStatus } from 'react-native';
 import { reduce, type MachineEvent, type MachineState } from '../core/machine';
+import { promptQueue } from '../core/queue';
 import { PermissionContext } from '../context';
 import type {
   PermissionController,
@@ -37,6 +38,8 @@ export function usePermission(
     options.revalidateOnFocus ?? ctx.defaults.revalidateOnFocus ?? true;
   const requestOnMount =
     options.requestOnMount ?? ctx.defaults.requestOnMount ?? false;
+  const notificationOptions =
+    options.notificationOptions ?? ctx.defaults.notificationOptions;
   const onStatusChange = options.onStatusChange;
   const adapter = options.adapter ?? ctx.adapter;
 
@@ -55,6 +58,8 @@ export function usePermission(
   stateRef.current = state;
   const rationaleRef = useRef(rationale);
   rationaleRef.current = rationale;
+  const notificationOptionsRef = useRef(notificationOptions);
+  notificationOptionsRef.current = notificationOptions;
   const onStatusChangeRef = useRef(onStatusChange);
   onStatusChangeRef.current = onStatusChange;
   const requestOnMountRef = useRef(requestOnMount);
@@ -79,8 +84,14 @@ export function usePermission(
           pendingRef.current = null;
           pending?.resolve(effect.status);
         } else if (effect.type === 'runRequest') {
-          adapter
-            .request(name)
+          // The app-wide queue serializes native prompts across every mounted
+          // hook/gate — the OS can only present one dialog at a time.
+          promptQueue
+            .enqueue(() =>
+              adapter.request(name, {
+                notificationOptions: notificationOptionsRef.current,
+              })
+            )
             .then((status) =>
               dispatchRef.current({ type: 'REQUEST_RESULT', status })
             )
@@ -132,6 +143,11 @@ export function usePermission(
   refreshRef.current = refresh;
 
   const openSettings = useCallback(() => adapter.openSettings(), [adapter]);
+
+  const openLimitedPicker = useCallback(
+    () => adapter.openLimitedPicker?.() ?? Promise.resolve(),
+    [adapter]
+  );
 
   // Initial check on mount and whenever the permission identity changes. On a
   // change we reset to a neutral state first so a stale status never lingers.
@@ -185,11 +201,13 @@ export function usePermission(
       status: state.status,
       phase: state.phase,
       isGranted: state.status === 'granted',
+      isLimited: state.status === 'limited',
       isBlocked: state.status === 'blocked',
       request,
       confirmRationale,
       cancelRationale,
       openSettings,
+      openLimitedPicker,
       refresh,
     }),
     [
@@ -199,6 +217,7 @@ export function usePermission(
       confirmRationale,
       cancelRationale,
       openSettings,
+      openLimitedPicker,
       refresh,
     ]
   );
