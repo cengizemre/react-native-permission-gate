@@ -4,6 +4,7 @@
 [![CI](https://github.com/cengizemre/react-native-permission-gate/actions/workflows/ci.yml/badge.svg)](https://github.com/cengizemre/react-native-permission-gate/actions/workflows/ci.yml)
 [![license](https://img.shields.io/npm/l/react-native-permission-gate.svg)](./LICENSE)
 [![types](https://img.shields.io/npm/types/react-native-permission-gate.svg)](./src/types.ts)
+[![React Native Directory](https://img.shields.io/badge/React%20Native%20Directory-listed-blue)](https://reactnative.directory/?search=react-native-permission-gate)
 
 Headless permission-flow orchestration for React Native: a state-machine hook, rationale gating, and a `<PermissionGate>` component. Bring your own UI.
 
