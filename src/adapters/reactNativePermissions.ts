@@ -54,6 +54,7 @@ const ANDROID: NativeMap = {
   bluetooth: PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
   motion: PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
   bodySensors: PERMISSIONS.ANDROID.BODY_SENSORS,
+  nearbyWifiDevices: PERMISSIONS.ANDROID.NEARBY_WIFI_DEVICES,
   // iOS-only aliases (photoLibraryAddOnly, mediaLibrary, reminders,
   // speechRecognition, appTrackingTransparency, faceId) → unavailable here.
 };
