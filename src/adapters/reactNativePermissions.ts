@@ -36,6 +36,7 @@ const IOS: NativeMap = {
   speechRecognition: PERMISSIONS.IOS.SPEECH_RECOGNITION,
   appTrackingTransparency: PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY,
   faceId: PERMISSIONS.IOS.FACE_ID,
+  siri: PERMISSIONS.IOS.SIRI,
   // Android-only aliases (storageReadAudio, storageReadVideo, bodySensors)
   // resolve to unavailable here.
 };
