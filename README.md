@@ -230,9 +230,9 @@ const status = await checkPermission('camera');
 
 **Cross-platform:** `camera`, `microphone`, `photoLibrary`, `contacts`, `calendar`, `calendarWriteOnly`, `locationWhenInUse`, `locationAlways`, `notifications`, `bluetooth`, `motion`.
 
-**iOS only:** `photoLibraryAddOnly`, `mediaLibrary`, `reminders`, `speechRecognition`, `appTrackingTransparency`, `faceId`.
+**iOS only:** `photoLibraryAddOnly`, `mediaLibrary`, `reminders`, `speechRecognition`, `appTrackingTransparency`, `faceId`, `siri`.
 
-**Android only:** `storageReadAudio`, `storageReadVideo`, `bodySensors`.
+**Android only:** `storageReadAudio`, `storageReadVideo`, `bodySensors`, `nearbyWifiDevices`.
 
 Each alias maps to the correct native permission per platform; anything not meaningful on the current platform resolves to `unavailable`. Need more? Provide a custom `adapter` - or open an issue.
 

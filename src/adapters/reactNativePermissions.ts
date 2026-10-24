@@ -37,8 +37,8 @@ const IOS: NativeMap = {
   appTrackingTransparency: PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY,
   faceId: PERMISSIONS.IOS.FACE_ID,
   siri: PERMISSIONS.IOS.SIRI,
-  // Android-only aliases (storageReadAudio, storageReadVideo, bodySensors)
-  // resolve to unavailable here.
+  // Android-only aliases (storageReadAudio, storageReadVideo, bodySensors,
+  // nearbyWifiDevices) resolve to unavailable here.
 };
 
 const ANDROID: NativeMap = {
@@ -57,7 +57,8 @@ const ANDROID: NativeMap = {
   bodySensors: PERMISSIONS.ANDROID.BODY_SENSORS,
   nearbyWifiDevices: PERMISSIONS.ANDROID.NEARBY_WIFI_DEVICES,
   // iOS-only aliases (photoLibraryAddOnly, mediaLibrary, reminders,
-  // speechRecognition, appTrackingTransparency, faceId) → unavailable here.
+  // speechRecognition, appTrackingTransparency, faceId, siri) → unavailable
+  // here.
 };
 
 const TABLE: NativeMap =
