@@ -159,4 +159,29 @@ describe('usePermissions', () => {
     expect(result.current.statuses.faceId).toBe('unavailable');
     expect(result.current.allGranted).toBe(false);
   });
+
+  it('survives a failing check and still requests on mount', async () => {
+    const adapter = multiMock({
+      initial: { camera: 'granted', microphone: 'requestable' },
+      afterRequest: { microphone: 'granted' },
+    });
+    adapter.check.mockImplementation(async (name: PermissionName) => {
+      if (name === 'microphone') throw new Error('native failure');
+      return 'granted';
+    });
+    const { result } = renderHook(() =>
+      usePermissions(['camera', 'microphone'], {
+        adapter,
+        requestOnMount: true,
+        ...noFocus,
+      })
+    );
+
+    await waitFor(() => expect(result.current.phase).toBe('settled'));
+    expect(adapter.request).toHaveBeenCalledTimes(1);
+    expect(adapter.request).toHaveBeenCalledWith('microphone', {
+      notificationOptions: undefined,
+    });
+    expect(result.current.allGranted).toBe(true);
+  });
 });

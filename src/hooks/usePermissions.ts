@@ -180,7 +180,13 @@ export function usePermissions(
         if (!adapter.isSupported(name)) {
           return [name, 'unavailable'] as const;
         }
-        return [name, await adapter.check(name)] as const;
+        try {
+          return [name, await adapter.check(name)] as const;
+        } catch {
+          // One failing check must not reject the whole set: keep the last
+          // known status for this permission.
+          return [name, statusesRef.current[name] ?? 'requestable'] as const;
+        }
       })
     );
     const next: PermissionStatusMap = {};

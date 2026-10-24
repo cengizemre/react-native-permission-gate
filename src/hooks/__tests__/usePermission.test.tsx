@@ -181,4 +181,29 @@ describe('usePermission', () => {
     expect(adapter.check).toHaveBeenCalledTimes(2);
     spy.mockRestore();
   });
+
+  it('keeps the status when a foreground re-check fails', async () => {
+    let handler: ((s: string) => void) | undefined;
+    const spy = jest.spyOn(AppState, 'addEventListener').mockImplementation(((
+      _event: string,
+      cb: (s: string) => void
+    ) => {
+      handler = cb;
+      return { remove: jest.fn() };
+    }) as unknown as typeof AppState.addEventListener);
+    const adapter = mockAdapter({ initial: 'granted' });
+    const { result } = renderHook(() =>
+      usePermission('camera', { adapter, revalidateOnFocus: true })
+    );
+    await waitFor(() => expect(result.current.status).toBe('granted'));
+
+    adapter.check.mockRejectedValueOnce(new Error('native failure'));
+    await act(async () => {
+      handler?.('active');
+    });
+
+    expect(adapter.check).toHaveBeenCalledTimes(2);
+    expect(result.current.status).toBe('granted');
+    spy.mockRestore();
+  });
 });

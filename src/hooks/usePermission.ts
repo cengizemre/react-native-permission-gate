@@ -182,7 +182,8 @@ export function usePermission(
   useEffect(() => {
     if (!revalidateOnFocus || !supported) return;
     const sub = AppState.addEventListener('change', (next: AppStateStatus) => {
-      if (next === 'active') refreshRef.current();
+      // A failed re-check keeps the current status; nothing awaits this call.
+      if (next === 'active') refreshRef.current().catch(() => {});
     });
     return () => sub.remove();
   }, [revalidateOnFocus, supported]);
