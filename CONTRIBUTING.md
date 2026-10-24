@@ -71,7 +71,7 @@ To fix formatting errors, run the following:
 yarn lint --fix
 ```
 
-To run the unit tests (the state machine and hooks are tested with a mock adapter — no device needed):
+To run the unit tests (the state machine and hooks are tested with a mock adapter - no device needed):
 
 ```sh
 yarn test

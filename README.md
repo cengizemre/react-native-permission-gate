@@ -194,7 +194,7 @@ media.anyBlocked; // at least one is blocked
 
 Declarative wrapper over the hook. Renders `children` once granted (or `limited`); otherwise renders your `rationale` / `blocked` / `fallback`. Pass a **function** as `children` to take full control for every state.
 
-Unlike the bare hook, the gate starts the request flow automatically on mount (`requestOnMount: true`) — override it via `options` if you want a manual trigger.
+Unlike the bare hook, the gate starts the request flow automatically on mount (`requestOnMount: true`) - override it via `options` if you want a manual trigger.
 
 ```tsx
 <PermissionGate name="microphone" options={{ rationale: true }}>
@@ -221,6 +221,7 @@ import {
   checkPermission,
   requestPermission,
   openAppSettings,
+  openLimitedPicker,
 } from 'react-native-permission-gate';
 
 const status = await checkPermission('camera');
@@ -253,22 +254,23 @@ const { result } = renderHook(() => usePermission('camera', { adapter }));
 
 ## Roadmap
 
-Actively maintained — this is what I'm planning, roughly in order. Open an issue if you want to influence the priorities, or grab one if you'd like to contribute.
+Actively maintained - this is what I'm planning, roughly in order. Open an issue if you want to influence the priorities, or grab one if you'd like to contribute.
 
-- **Web adapter** — a `navigator.permissions`-backed adapter so the same hooks run on react-native-web (query where supported, graceful `unavailable` elsewhere).
-- **Android "never asked" detection** — Android reports both *never asked* and *soft-denied* as the same state before requesting. An optional tiny storage adapter would let the library distinguish them, so you can decide whether to show a rationale on the very first ask.
-- **Expo example app** — a second example using an Expo dev client + the `react-native-permissions` config plugin, so both workflows are covered end to end.
-- **Per-Provider prompt queue** — the queue is currently an app-wide singleton, which is correct for a single OS prompt surface but untestable to override; making it injectable via `PermissionProvider` would help large apps and tests.
-- **More aliases** — `siri`, `nearbyWifiDevices`, iOS `location accuracy` (full vs. reduced) are on the list; open an issue if you're missing one.
+- **Web adapter** - a `navigator.permissions`-backed adapter so the same hooks run on react-native-web (query where supported, graceful `unavailable` elsewhere).
+- **Android "never asked" detection** - Android reports both *never asked* and *soft-denied* as the same state before requesting. An optional tiny storage adapter would let the library distinguish them, so you can decide whether to show a rationale on the very first ask.
+- **Expo example app** - a second example using an Expo dev client + the `react-native-permissions` config plugin, so both workflows are covered end to end.
+- **Per-Provider prompt queue** - the queue is currently an app-wide singleton, which is correct for a single OS prompt surface but untestable to override; making it injectable via `PermissionProvider` would help large apps and tests.
+- **Test helpers** - a `createMockAdapter` under a `react-native-permission-gate/testing` subpath, so consumers can test their flows without hand-rolling an adapter.
+- **More aliases** - iOS `location accuracy` (full vs. reduced) is next; open an issue if you're missing one.
 
 ## Known limitations
 
-Things I know about and consciously ship with — so you don't have to discover them the hard way:
+Things I know about and consciously ship with - so you don't have to discover them the hard way:
 
-- **Android can't distinguish "never asked" from "denied once"** before the first request — both surface as `requestable`. `blocked` is only detectable *after* a request settles. This is an OS constraint; the roadmap item above is the planned mitigation.
+- **Android can't distinguish "never asked" from "denied once"** before the first request - both surface as `requestable`. `blocked` is only detectable *after* a request settles. This is an OS constraint; the roadmap item above is the planned mitigation.
 - **`notificationOptions` are iOS-only.** Android 13+ notification permission goes through the standard runtime-permission dialog and ignores them.
-- **`limited` is iOS-specific** (photos/contacts partial access). On Android the closest concept — the Android 14+ partial photo picker — is not yet modeled.
-- **Expo Go is not supported** (native module) — use a dev client or prebuild.
+- **`limited` is iOS-specific** (photos/contacts partial access). On Android the closest concept - the Android 14+ partial photo picker - is not yet modeled.
+- **Expo Go is not supported** (native module) - use a dev client or prebuild.
 - **The rationale phase is UX-only.** The library doesn't consult Android's `shouldShowRequestPermissionRationale`; you decide when to gate with `rationale: true`. This is by design (headless, explicit), but it means the library won't auto-suggest when a rationale is appropriate.
 
 ## License
