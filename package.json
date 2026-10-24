@@ -66,8 +66,8 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-    "@eslint/compat": "^2.1.0",
-    "@eslint/eslintrc": "^3.3.5",
+    "@eslint/compat": "^2.1.1",
+    "@eslint/eslintrc": "^3.3.7",
     "@eslint/js": "^10.0.1",
     "@react-native/babel-preset": "0.85.3",
     "@react-native/eslint-config": "0.85.3",
@@ -76,18 +76,18 @@
     "@types/jest": "^29.5.12",
     "@types/react": "^19.2.0",
     "del-cli": "^7.0.0",
-    "eslint": "^9.39.4",
+    "eslint": "^9.39.5",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-ft-flow": "^3.0.11",
-    "eslint-plugin-prettier": "^5.5.6",
+    "eslint-plugin-prettier": "^5.5.7",
     "jest": "^29.7.0",
-    "prettier": "^3.8.3",
+    "prettier": "^3.9.10",
     "react": "19.2.3",
     "react-native": "0.85.3",
     "react-native-builder-bob": "^0.43.0",
     "react-native-permissions": "^5.6.3",
     "react-test-renderer": "19.2.3",
-    "turbo": "^2.9.16",
+    "turbo": "^2.11.10",
     "typescript": "^6.0.3"
   },
   "peerDependencies": {
