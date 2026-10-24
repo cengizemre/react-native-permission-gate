@@ -7910,7 +7910,7 @@ __metadata:
     react-native: "npm:0.85.3"
     react-native-builder-bob: "npm:^0.43.0"
     react-native-monorepo-config: "npm:^0.4.0"
-    react-native-permissions: "npm:^5.6.0"
+    react-native-permissions: "npm:^5.6.3"
   languageName: unknown
   linkType: soft
 
@@ -7937,7 +7937,7 @@ __metadata:
     react: "npm:19.2.3"
     react-native: "npm:0.85.3"
     react-native-builder-bob: "npm:^0.43.0"
-    react-native-permissions: "npm:^5.6.0"
+    react-native-permissions: "npm:^5.6.3"
     react-test-renderer: "npm:19.2.3"
     turbo: "npm:^2.9.16"
     typescript: "npm:^6.0.3"
@@ -7948,9 +7948,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"react-native-permissions@npm:^5.6.0":
-  version: 5.6.0
-  resolution: "react-native-permissions@npm:5.6.0"
+"react-native-permissions@npm:^5.6.3":
+  version: 5.6.3
+  resolution: "react-native-permissions@npm:5.6.3"
   peerDependencies:
     react: "*"
     react-native: "*"
@@ -7958,7 +7958,7 @@ __metadata:
   peerDependenciesMeta:
     react-native-windows:
       optional: true
-  checksum: 10c0/9f72a2ccec761dfe1c3064a2694f5c03bd51f216d9c2bcd358aa152b7219f93561bd48271f9323e204e670f1bb7fa3e260d0715167358a0ed7360a5f278e0dce
+  checksum: 10c0/eff296fef8d9ccff75f5ca5c8b715d7f4294e90fcc6173d7031611a43fd1ec1f13d8a6bf18a36f2c06a79995e9ef62a4a3c865112ba50fefaf40f95350709bff
   languageName: node
   linkType: hard
 
