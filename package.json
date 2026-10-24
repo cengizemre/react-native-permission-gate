@@ -1,6 +1,6 @@
 {
   "name": "react-native-permission-gate",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Headless permission flow orchestration for React Native. A state-machine hook, rationale gating, and a PermissionGate component. Bring your own UI.",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
