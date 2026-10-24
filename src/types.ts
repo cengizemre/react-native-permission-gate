@@ -46,7 +46,9 @@ export type PermissionName =
   | 'bodySensors'
   | 'storageReadAudio'
   | 'storageReadVideo'
-  | 'faceId';
+  | 'faceId'
+  | 'nearbyWifiDevices'
+  | 'siri';
 
 /**
  * iOS notification-authorization options for `notifications` requests.

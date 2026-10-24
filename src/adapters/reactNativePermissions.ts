@@ -36,8 +36,9 @@ const IOS: NativeMap = {
   speechRecognition: PERMISSIONS.IOS.SPEECH_RECOGNITION,
   appTrackingTransparency: PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY,
   faceId: PERMISSIONS.IOS.FACE_ID,
-  // Android-only aliases (storageReadAudio, storageReadVideo, bodySensors)
-  // resolve to unavailable here.
+  siri: PERMISSIONS.IOS.SIRI,
+  // Android-only aliases (storageReadAudio, storageReadVideo, bodySensors,
+  // nearbyWifiDevices) resolve to unavailable here.
 };
 
 const ANDROID: NativeMap = {
@@ -54,8 +55,10 @@ const ANDROID: NativeMap = {
   bluetooth: PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
   motion: PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
   bodySensors: PERMISSIONS.ANDROID.BODY_SENSORS,
+  nearbyWifiDevices: PERMISSIONS.ANDROID.NEARBY_WIFI_DEVICES,
   // iOS-only aliases (photoLibraryAddOnly, mediaLibrary, reminders,
-  // speechRecognition, appTrackingTransparency, faceId) → unavailable here.
+  // speechRecognition, appTrackingTransparency, faceId, siri) → unavailable
+  // here.
 };
 
 const TABLE: NativeMap =
